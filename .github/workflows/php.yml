@@ -31,5 +31,5 @@ jobs:
       run: composer install --prefer-dist --no-progress --no-suggest
 
     - name: PHPStan (php-actions)
-      uses: php-actions/phpstan@v1
+      uses: chindit/actions-phpstan@master
 
