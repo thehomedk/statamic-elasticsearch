@@ -1,0 +1,1 @@
+# Elasticsearch driver for Statamic

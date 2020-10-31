@@ -1,0 +1,35 @@
+{
+    "name": "thehome/statamic-elasticsearch",
+    "description": "Elasticsearch driver for Statamic",
+    "keywords": [
+        "Statamic",
+        "Elasticsearch"
+    ],
+    "homepage": "https://www.thehome.dk",
+    "type": "statamic-addon",
+    "require": {
+        "elasticsearch/elasticsearch": "^7.9"
+    },
+    "authors": [
+        {
+            "name": "Tom Helmer Hansen",
+            "email": "thelmer@thehome.dk"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "TheHome\\StatamicElasticsearch\\": "src"
+        }
+    },
+    "extra": {
+        "statamic": {
+            "name": "Elasticsearch driver",
+            "description": "Elasticsearch driver"
+        },
+        "laravel": {
+            "providers": [
+                "TheHome\\StatamicElasticsearch\\ServiceProvider"
+            ]
+        }
+    }
+}
