@@ -11,12 +11,12 @@ class SearchTransformers
         $text = '';
         if (is_array($data)) {
           foreach (self::recursiveFind($data, 'text') as $value) {
-            $text .= $value;
+            $text .= ' ' . $value;
           }
         } else {
           $text = $data;
         }
-        return $text;
+        return trim(preg_replace('/\s+/', ' ', $text));
       },
     ];
   }

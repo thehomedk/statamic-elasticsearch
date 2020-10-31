@@ -33,3 +33,5 @@ jobs:
     - name: PHPStan
       run: vendor/bin/phpstan analyze -c phpstan.neon
 
+    - name: PHPUnit
+      run: vendor/bin/phpunit
