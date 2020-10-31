@@ -1,5 +1,6 @@
 {
     "name": "thehome/statamic-elasticsearch",
+    "license": "MIT",
     "description": "Elasticsearch driver for Statamic",
     "keywords": [
         "Statamic",
@@ -27,7 +28,7 @@
     "extra": {
         "statamic": {
             "name": "Elasticsearch driver",
-            "description": "Elasticsearch driver"
+            "description": "Elasticsearch driver for Statamic 3"
         },
         "laravel": {
             "providers": [
