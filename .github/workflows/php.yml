@@ -30,6 +30,6 @@ jobs:
       if: steps.composer-cache.outputs.cache-hit != 'true'
       run: composer install --prefer-dist --no-progress --no-suggest
 
-    - name: PHPStan (php-actions)
-      uses: chindit/actions-phpstan@master
+    - name: PHPStan
+      run: vendor/bin/phpstan analyze -c phpstan.neon
 
