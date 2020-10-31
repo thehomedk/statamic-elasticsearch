@@ -21,7 +21,7 @@ class SearchTransformers
     ];
   }
 
-  public static function recursiveFind(array $haystack, $needle)
+  protected static function recursiveFind(array $haystack, string $needle) : \Iterator
   {
     $iterator = new \RecursiveArrayIterator($haystack);
     $recursive = new \RecursiveIteratorIterator(

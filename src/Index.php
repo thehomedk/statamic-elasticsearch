@@ -2,37 +2,65 @@
 
 namespace TheHome\StatamicElasticsearch;
 
+use Illuminate\Support\Collection;
 use Statamic\Search\Index as BaseIndex;
 use TheHome\StatamicElasticsearch\SearchTransformers;
 
 class Index extends BaseIndex
-{
+{  
+  /**
+   * client
+   *
+   * @var \Elasticsearch\Client
+   */
+  protected $client;
+  
   const DRIVER_NAME = 'elasticsearch';
-
-  public function __construct($client, $name, array $config)
+  
+  /**
+   * __construct
+   *
+   * @param  \Elasticsearch\Client $client
+   * @param  string $name
+   * @param  array $config
+   * @return void
+   */
+  public function __construct(\Elasticsearch\Client $client, string $name, array $config)
   {
     $this->client = $client;
     parent::__construct($name, $config);
   }
-
-  public function search($query)
+  
+  /**
+   * search
+   *
+   * @param  string $query
+   * @return Query
+   */
+  public function search($query) : Query 
   {
     return (new Query($this))->query($query);
   }
-
-  public function delete($document)
+  
+  /**
+   * delete
+   *
+   * @param  mixed $document
+   * @return void
+   */
+  public function delete($document) : void
   {
     $params = $this->indexKey();
     $params['id'] = $document->reference();
     $this->client->delete($params);
   }
 
-  public function exists()
+  public function exists() : bool
   {
     return $this->client->indices()->exists($this->indexKey());
   }
 
-  protected function insertDocuments(\Statamic\Search\Documents $documents)
+  protected function insertDocuments(\Statamic\Search\Documents $documents) : void
   {
     if (!$this->exists()) {
       $this->createIndex();
@@ -69,14 +97,21 @@ class Index extends BaseIndex
     }
   }
 
-  protected function deleteIndex()
+  protected function deleteIndex() : void
   {
     if ($this->client->indices()->exists($this->indexKey())) {
       $this->client->indices()->delete($this->indexKey());
     }
   }
-
-  public function searchUsingApi($query, $fields = null)
+  
+  /**
+   * searchUsingApi
+   *
+   * @param  string $query
+   * @param  array $fields
+   * @return Collection
+   */
+  public function searchUsingApi(string $query, array $fields = null) : Collection
   {
     $params = $this->indexKey();
     $params['body'] = [
@@ -100,12 +135,12 @@ class Index extends BaseIndex
     });
   }
 
-  protected function indexKey()
+  protected function indexKey() : array
   {
     return ['index' => $this->title()];
   }
 
-  protected function createIndex()
+  protected function createIndex() : void
   {
     $params = $this->indexKey();
     $params['body'] = [

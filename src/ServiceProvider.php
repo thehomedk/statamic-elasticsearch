@@ -9,7 +9,7 @@ use TheHome\StatamicElasticsearch\Index as ElasticsearchIndex;
 
 class ServiceProvider extends AddonServiceProvider
 {
-  public function boot()
+  public function boot() : void
   {
     parent::boot();
 
