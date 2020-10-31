@@ -66,7 +66,7 @@ class Index extends BaseIndex
       $this->createIndex();
     }
 
-    $transforms = $this->config['transforms'];
+    $transforms = $this->config['transforms'] ?? [];
     $transformers = SearchTransformers::resolve();
 
     $chunks = $documents->chunk(10);
