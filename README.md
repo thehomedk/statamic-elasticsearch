@@ -9,12 +9,9 @@ Here's an entry in `indexes` for the pages collection:
 
     'public' => [
       'driver' => 'elasticsearch',
-      'title' => 'public',
       'searchables' => 'collection:pages',
       'fields' => ['title', 'description', 'content'],
     ],
-
-Note the `title` param which defines the index name as it would otherwise be named after the driver.
 
 Here's an example entry in the `drivers` section defining the connection properties for your Elasticsearch server.
 
