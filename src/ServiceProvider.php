@@ -15,14 +15,15 @@ class ServiceProvider extends AddonServiceProvider
 
     app(IndexManager::class)->extend(ElasticsearchIndex::DRIVER_NAME, function (
       $app,
-      $config
+      $config,
+      $name
     ) {
       $client = ClientBuilder::create()
         ->setHosts($config['hosts'])
         ->build();
       return new ElasticsearchIndex(
         $client,
-        ElasticsearchIndex::DRIVER_NAME,
+        $name,
         $config
       );
     });

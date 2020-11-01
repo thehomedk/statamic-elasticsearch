@@ -50,14 +50,14 @@ class Index extends BaseIndex
    */
   public function delete($document) : void
   {
-    $params = $this->indexKey();
+    $params = $this->indexName();
     $params['id'] = $document->reference();
     $this->client->delete($params);
   }
 
   public function exists() : bool
   {
-    return $this->client->indices()->exists($this->indexKey());
+    return $this->client->indices()->exists($this->indexName());
   }
 
   protected function insertDocuments(\Statamic\Search\Documents $documents) : void
@@ -86,7 +86,7 @@ class Index extends BaseIndex
 
         $params['body'][] = [
           'index' => [
-            '_index' => $this->title(),
+            '_index' => $this->name(),
             '_id' => $key,
           ],
         ];
@@ -99,8 +99,8 @@ class Index extends BaseIndex
 
   protected function deleteIndex() : void
   {
-    if ($this->client->indices()->exists($this->indexKey())) {
-      $this->client->indices()->delete($this->indexKey());
+    if ($this->client->indices()->exists($this->indexName())) {
+      $this->client->indices()->delete($this->indexName());
     }
   }
   
@@ -113,7 +113,7 @@ class Index extends BaseIndex
    */
   public function searchUsingApi(string $query, array $fields = null) : Collection
   {
-    $params = $this->indexKey();
+    $params = $this->indexName();
     $params['body'] = [
       'size' => 50,
       '_source' => false,
@@ -135,14 +135,14 @@ class Index extends BaseIndex
     });
   }
 
-  protected function indexKey() : array
+  protected function indexName() : array
   {
-    return ['index' => $this->title()];
+    return ['index' => $this->name()];
   }
 
   protected function createIndex() : void
   {
-    $params = $this->indexKey();
+    $params = $this->indexName();
     $params['body'] = [
       "settings" => [
         "analysis" => [
