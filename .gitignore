@@ -1,4 +1,5 @@
 .DS_Store
 *.lock
+.phpunit.cache
 vendor
 node_modules
