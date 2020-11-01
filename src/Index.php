@@ -148,7 +148,7 @@ class Index extends BaseIndex
         "analysis" => [
           "analyzer" => [
             "default" => [
-              "type" => "danish",
+              "type" => $this->config['analyzer'] ?? 'standard',
             ],
           ],
         ],
