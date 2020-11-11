@@ -24,7 +24,7 @@ Here's an example entry in the `drivers` section defining the connection propert
     ],
 
 ## Content transformation
-Statamic supports transformer for the index data, but the current implemtation is not compatible with how Laravel serializes the configuration when running `php artisan optimize`. Therefore this driver has it's own system that can be configed like this:
+Statamic supports transformer for the index data, but the current implementation is not compatible with how Laravel serializes the configuration when running `php artisan optimize`. Therefore this driver has it's own system that can be configured like this:
 
     'public' => [
       'driver' => 'elasticsearch',
@@ -59,7 +59,7 @@ You can verify that your elaticsearch index looks correct with:
 
 Or make queries directly with:
 
-    curl 127.0.0.1:9200/business/_search?q=test | jq
+    curl 127.0.0.1:9200/public/_search?q=test | jq
 
 ## Templating
 You can use the default Statamic search tag like usual:
