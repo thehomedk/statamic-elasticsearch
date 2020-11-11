@@ -1,5 +1,6 @@
 [![Statamic 3.0+](https://img.shields.io/badge/Statamic-3.0+-FF269E?style=for-the-badge)](https://statamic.com)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/thehome/statamic-elasticsearch.svg?style=for-the-badge)](https://packagist.org/packages/thehome/statamic-elasticsearch)
+<img src="logo-elastic-horizontal-color.png?raw=true" height="30">
 
 # Elasticsearch driver for Statamic
 
