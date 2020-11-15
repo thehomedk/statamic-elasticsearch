@@ -1,3 +1,7 @@
+[![Statamic 3.0+](https://img.shields.io/badge/Statamic-3.0+-FF269E?style=for-the-badge)](https://statamic.com)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/thehome/statamic-elasticsearch.svg?style=for-the-badge)](https://packagist.org/packages/thehome/statamic-elasticsearch)
+<img src="logo-elastic-horizontal-color.png?raw=true" height="30">
+
 # Elasticsearch driver for Statamic
 
 This addon add's a Elasticsearch driver to Statamics builtin search system ( [docs](https://statamic.dev/search) ).
@@ -24,7 +28,7 @@ Here's an example entry in the `drivers` section defining the connection propert
     ],
 
 ## Content transformation
-Statamic supports transformer for the index data, but the current implemtation is not compatible with how Laravel serializes the configuration when running `php artisan optimize`. Therefore this driver has it's own system that can be configed like this:
+Statamic supports transformer for the index data, but the current implementation is not compatible with how Laravel serializes the configuration when running `php artisan optimize`. Therefore this driver has it's own system that can be configured like this:
 
     'public' => [
       'driver' => 'elasticsearch',
@@ -59,7 +63,7 @@ You can verify that your elaticsearch index looks correct with:
 
 Or make queries directly with:
 
-    curl 127.0.0.1:9200/business/_search?q=test | jq
+    curl 127.0.0.1:9200/public/_search?q=test | jq
 
 ## Templating
 You can use the default Statamic search tag like usual:
