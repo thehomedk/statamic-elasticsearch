@@ -7,8 +7,29 @@ use Statamic\Search\QueryBuilder;
 
 class Query extends QueryBuilder
 {
-    public function getSearchResults(string $query) : Collection
+    protected $total;
+
+    public function getSearchResults(string $query): Collection
     {
-        return $this->index->searchUsingApi($query);
+        $result = $this->index->searchUsingApi(
+            $query,
+            $this->limit,
+            $this->offset,
+        );
+        
+        $this->total = $result['total'];
+
+        return $result['hits'];
+    }
+
+    public function get($columns = ['*'])
+    {
+        $items = $this->getBaseItems();
+
+        return $items;
+    }
+
+    public function getTotal() : int {
+        return $this->total;
     }
 }
