@@ -137,8 +137,9 @@ class Index extends BaseIndex
    * @param  int $offset
    * @return array
    */
-  public function searchUsingApi(string $query, int $limit = 200, int $offset = 0) : array
+  public function searchUsingApi(string $query, $limit, int $offset = 0) : array
   {
+    $limit = $limit ?? 100;
     $params = $this->indexName();
     $fields = array_diff($this->config['fields'], ['status']);
     

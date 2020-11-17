@@ -22,11 +22,9 @@ class Query extends QueryBuilder
         return $result['hits'];
     }
 
-    public function get($columns = ['*'])
+    public function getItems()
     {
-        $items = $this->getBaseItems();
-
-        return $items;
+        return $this->getBaseItems();
     }
 
     public function getTotal() : int {
