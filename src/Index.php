@@ -46,7 +46,7 @@ class Index extends BaseIndex
      * search
      *
      * @param  string $query
-     * @return \Elasticsearch\Query
+     * @return \TheHome\StatamicElasticsearch\Query
      */
     public function search($query): Query
     {
