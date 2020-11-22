@@ -6,9 +6,12 @@ use Statamic\Search\Index as BaseIndex;
 use TheHome\StatamicElasticsearch\SearchTransformers;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
+use Statamic\Facades\Site;
 
 class Index extends BaseIndex
 {
+    const DRIVER_NAME = "elasticsearch";
+
     /**
      * client
      *
@@ -22,8 +25,6 @@ class Index extends BaseIndex
      * @var bool
      */
     protected $elastic_pagination;
-
-    const DRIVER_NAME = 'elasticsearch';
 
     /**
      * __construct
@@ -40,17 +41,6 @@ class Index extends BaseIndex
     ) {
         $this->client = $client;
         parent::__construct($name, $config);
-    }
-
-    /**
-     * search
-     *
-     * @param  string $query
-     * @return \TheHome\StatamicElasticsearch\Query
-     */
-    public function search($query): Query
-    {
-        return (new Query($this))->query($query);
     }
 
     /**
@@ -76,6 +66,17 @@ class Index extends BaseIndex
     }
 
     /**
+     * search
+     *
+     * @param  string $query
+     * @return \TheHome\StatamicElasticsearch\Query
+     */
+    public function search($query): Query
+    {
+        return (new Query($this))->query($query);
+    }
+
+    /**
      * delete
      *
      * @param  mixed $document
@@ -84,7 +85,7 @@ class Index extends BaseIndex
     public function delete($document): void
     {
         $params = $this->indexName();
-        $params['id'] = $document->reference();
+        $params["id"] = $document->reference();
         $this->client->delete($params);
     }
 
@@ -100,7 +101,7 @@ class Index extends BaseIndex
             $this->createIndex();
         }
 
-        $transforms = $this->config['transforms'] ?? [];
+        $transforms = $this->config["transforms"] ?? [];
         $transformers = SearchTransformers::resolve();
 
         $chunks = $documents->chunk(10);
@@ -123,13 +124,19 @@ class Index extends BaseIndex
                     }
                 }
 
-                $params['body'][] = [
-                    'index' => [
-                        '_index' => $this->name(),
-                        '_id' => $key,
+                $params["body"][] = [
+                    "index" => [
+                        "_index" => $this->name(),
+                        "_id" => $key,
                     ],
                 ];
-                $params['body'][] = $item;
+
+                // Use handle from site object to filter on site
+                if (isset($item["site"])) {
+                    $item["site"] = $item["site"]->handle();
+                }
+
+                $params["body"][] = $item;
             });
 
             $this->client->bulk($params);
@@ -154,71 +161,84 @@ class Index extends BaseIndex
     public function searchUsingApi(
         string $query,
         $limit,
-        int $offset = 0
+        int $offset = 0,
+        $site
     ): array {
-        $limit = $limit ?? 100;
-        $params = $this->indexName();
-        $fields = array_diff($this->config['fields'], ['status']);
+        $use_status_filter = in_array("status", $this->config["fields"]);
+        $use_site_filter = $site && in_array("site", $this->config["fields"]);
+        $fields = array_diff($this->config["fields"], ["status", "site"]);
 
-        if ($this->isUsingElasticPagination()) {
-            $params['body'] = [
-                'from' => $offset,
-                'size' => $limit,
-                '_source' => false,
-                'query' => [
-                    'bool' => [
-                        'filter' => ['term' => ['status' => 'published']],
-                        'must' => [
-                            'multi_match' => [
-                                'query' => $query,
-                                'fields' => $fields,
-                            ],
+        $limit = $limit ?? 200;
+
+        // Don't paginate with elasticsearch
+        if (!$this->isUsingElasticPagination()) {
+            $offset = 0;
+            $limit = 200;
+        }
+
+        $params = $this->indexName();
+        $params["body"] = [
+            "from" => $offset,
+            "size" => $limit,
+            "_source" => false,
+            "query" => [
+                "bool" => [
+                    "filter" => [],
+                    "must" => [
+                        "multi_match" => [
+                            "query" => $query,
+                            "fields" => $fields,
                         ],
                     ],
                 ],
+            ],
+        ];
+
+        if ($use_site_filter) {
+            $params["body"]["query"]["bool"]["filter"][] = [
+                "term" => [
+                    "site" => $site,
+                ],
             ];
-        } else {
-            $params['body'] = [
-                'size' => 500,
-                '_source' => false,
-                'query' => [
-                    'multi_match' => [
-                        'query' => $query,
-                        'fields' => $fields,
-                    ],
+        }
+
+        if ($use_status_filter) {
+            $params["body"]["query"]["bool"]["filter"][] = [
+                "term" => [
+                    "status" => "published",
                 ],
             ];
         }
 
         $response = $this->client->search($params);
 
-        $hits = collect($response['hits']['hits'])->map(function ($hit) {
-            $hit['id'] = $hit['_id'];
-            $hit['search_score'] = $hit['_score'];
+        $hits = collect($response["hits"]["hits"])->map(function ($hit) {
+            $hit["id"] = $hit["_id"];
+            $hit["search_score"] = $hit["_score"];
 
             return $hit;
         });
 
         return [
-            'total' => $response['hits']['total']['value'],
-            'hits' => $hits,
+            "total" => $response["hits"]["total"]["value"],
+            "hits" => $hits,
         ];
     }
 
     protected function indexName(): array
     {
-        return ['index' => $this->name()];
+        return ["index" => $this->name()];
     }
 
     protected function createIndex(): void
     {
         $params = $this->indexName();
-        $params['body'] = [
+        $params["body"] = [
             "settings" => [
                 "analysis" => [
                     "analyzer" => [
                         "default" => [
-                            "type" => $this->config['analyzer'] ?? 'standard',
+                            "type" => $this->config["analyzer"] ?? "standard",
                         ],
                     ],
                 ],

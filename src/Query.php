@@ -15,17 +15,25 @@ class Query extends QueryBuilder
     protected $total;
 
     /**
+     * total
+     *
+     * @var int
+     */
+    protected $site;
+
+    /**
      * getSearchResults
      *
      * @param  string $query
      * @return Collection
      */
     public function getSearchResults(string $query): Collection
-    {
+    {   
         $result = $this->index->searchUsingApi(
             $query,
             $this->limit,
-            $this->offset
+            $this->offset,
+            $this->site,
         );
 
         $this->total = $result['total'];
@@ -36,9 +44,9 @@ class Query extends QueryBuilder
     /**
      * getItems
      *
-     * @return array
+     * @return mixed
      */
-    public function getItems(): array
+    public function getItems()
     {
         return $this->getBaseItems();
     }
@@ -51,5 +59,17 @@ class Query extends QueryBuilder
     public function getTotal(): int
     {
         return $this->total;
+    }
+
+    /**
+     * set site
+     *
+     * @return \TheHome\StatamicElasticsearch\Query
+     */
+    public function site($site): self
+    {
+        $this->site = $site;
+
+        return $this;
     }
 }
