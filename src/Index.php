@@ -156,6 +156,7 @@ class Index extends BaseIndex
      * @param  string $query
      * @param  int $limit
      * @param  int $offset
+     * @param  string $site
      * @return array
      */
     public function searchUsingApi(

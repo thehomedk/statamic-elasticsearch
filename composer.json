@@ -38,6 +38,7 @@
     },
     "require-dev": {
         "phpstan/phpstan": "^0.12.52",
-        "phpunit/phpunit": "^9"
+        "phpunit/phpunit": "^9",
+        "livewire/livewire": "^2.3"
     }
 }

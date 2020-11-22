@@ -15,9 +15,9 @@ class Query extends QueryBuilder
     protected $total;
 
     /**
-     * total
+     * site
      *
-     * @var int
+     * @var string $site
      */
     protected $site;
 
@@ -53,7 +53,7 @@ class Query extends QueryBuilder
 
     /**
      * getTotal
-     *
+     * 
      * @return int
      */
     public function getTotal(): int
@@ -63,7 +63,8 @@ class Query extends QueryBuilder
 
     /**
      * set site
-     *
+     * 
+     * @param  string $site
      * @return \TheHome\StatamicElasticsearch\Query
      */
     public function site($site): self

@@ -7,66 +7,109 @@ use Statamic\Facades\Search as StatamicSearch;
 
 class Search extends Component
 {
-    /* @var string $index */
+    /** @var string */
     public $index;
 
-    /* @var int $size */
+    /** @var int */
     public $size;
 
-    /* @var string $q */
+    /** @var string */
     public $q;
 
-    /* @var string $site */
+    /** @var string */
     public $site;
 
-    /* @var int $page */
+    /** @var int */
     public $page = 1;
 
-    /* @var int $page */
+    /** @var int */
     public $total;
     
-    /* @var array $queryString */
+    /** @var array */
     protected $queryString = [
         'q' => ['except' => ''],
         'page' => ['except' => 1],
     ];
 
+    /**
+     * mount
+     * 
+     * @param  string $index
+     * @param  int $size
+     * @return void
+     */
     public function mount($index = 'default', $size = 10) {
         $this->index = $index;
         $this->size = $size;
         $this->site = \Statamic\Facades\Site::current()->handle();
     }
 
+    /**
+     * render
+     * 
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
     public function render()
     {
         return view('elasticsearch::search', ['result' => $this->search()]);
     }
-
+    
+    /**
+     * resetPage
+     * 
+     * @return void
+     */
     public function resetPage()
     {
         $this->page = 1;
     }
 
+    /**
+     * previousPage
+     * 
+     * @return void
+     */
     public function previousPage()
     {
         $this->page--;
     }
 
+    /**
+     * nextPage
+     * 
+     * @return void
+     */
     public function nextPage()
     {
         $this->page++;
     }
 
+    /**
+     * setPage
+     * 
+     * @param  int $page
+     * @return void
+     */
     public function setPage($page)
     {
         $this->page = $page;
     }
 
+    /**
+     * totalPages
+     * 
+     * @return int
+     */
     public function totalPages(): int
     {
-        return ceil($this->total / $this->size);
+        return (int) ceil($this->total / $this->size);
     }
 
+    /**
+     * pagination
+     * 
+     * @return array
+     */
     public function pagination(): array
     {
         $pages[] = 1;
@@ -134,6 +177,11 @@ class Search extends Component
         return $this->page === $this->totalPages();
     }
 
+    /**
+     * Determine if the paginator is on the last page.
+     *
+     * @return array
+     */
     protected function search()
     {
         if ($this->q !== null) {
@@ -149,5 +197,7 @@ class Search extends Component
 
             return $items;
         }
+
+        return [];
     }
 }
