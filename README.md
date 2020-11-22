@@ -80,7 +80,7 @@ You can use the default Statamic search tag like usual:
     {{ /search:results }}
 
 ### Livewire componenent with pagination
-This Livewire component supports pagination using Elesticsearch for the pagination. First you need to have a Livewire support. The easy way is to install Jonas's addon : 
+This Livewire component supports pagination using Elasticsearch for the pagination. First you need to have a Livewire support. The easy way is to install Jonas's addon : 
 
     composer require jonassiewertsen/statamic-livewire
 
