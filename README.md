@@ -79,6 +79,22 @@ You can use the default Statamic search tag like usual:
         {{ /if }}
     {{ /search:results }}
 
-### Paginated tag
+### Livewire componenent with pagination
+This Livewire component supports pagination using Elesticsearch for the pagination. First you need to have a Livewire support. The easy way is to install Jonas's addon : 
 
-### Facets
+    composer require jonassiewertsen/statamic-livewire
+
+Then make your search antlers template including:
+
+    {{ livewire:styles }}
+    {{ livewire:elasticsearch.search index="default" limit="10"}}
+    {{ livewire:scripts }}  
+
+The template can be overridden by publishing it:
+
+    php artisan vendor:publish --tag=elasticsearch-views
+
+### Planned features
+- Facets
+- set analyzer based om documents site locale
+
