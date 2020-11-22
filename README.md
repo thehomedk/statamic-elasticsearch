@@ -78,7 +78,7 @@ You can use the default Statamic search tag like usual:
     {{ /search:results }}
 
 ### Livewire componenent with pagination
-This Livewire component supports pagination using Elasticsearch for the pagination. This requires that the fields `status` and `site` are indexed so add them to the config:
+The included Livewire component supports pagination using Elasticsearch for the pagination. This requires that the fields `status` and `site` are indexed so add them to the config:
 
     'public' => [
       ....
