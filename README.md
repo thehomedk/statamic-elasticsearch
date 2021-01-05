@@ -28,12 +28,10 @@ Here's an example entry in the `drivers` section defining the connection propert
     ],
 
 ## Content transformation
-Statamic supports transformer for the index data, but the current implementation is not compatible with how Laravel serializes the configuration when running `php artisan optimize`. Therefore this driver has it's own system that can be configured like this:
+Statamic supports transformers for the index data, but the current implementation is not compatible with how Laravel serializes the configuration when running `php artisan optimize`. Therefore this driver has it's own system that can be configured like this:
 
     'public' => [
-      'driver' => 'elasticsearch',
-      'searchables' => 'collection:pages',
-      'fields' => ['title', 'description', 'content'],
+      ...
       'transforms' => ['content' => 'bardToText'],
     ],
 
@@ -79,6 +77,29 @@ You can use the default Statamic search tag like usual:
         {{ /if }}
     {{ /search:results }}
 
-### Paginated tag
+### Livewire componenent with pagination
+The included Livewire component supports pagination using Elasticsearch for the pagination. This requires that the fields `status` and `site` are indexed so add them to the config:
 
-### Facets
+    'public' => [
+      ....
+      'fields' => [ ... 'status', 'site'],
+    ], 
+
+Then you need to have Livewire support for your antlers templates. The easy way is to install Jonas's addon : 
+
+    composer require jonassiewertsen/statamic-livewire
+
+Then make your search antlers template including:
+
+    {{ livewire:styles }}
+    {{ livewire:elasticsearch.search index="public" limit="10"}}
+    {{ livewire:scripts }}  
+
+The template can be overridden by publishing it:
+
+    php artisan vendor:publish --tag=elasticsearch-views
+
+### Planned features
+- Facets
+- set analyzer based om documents site locale
+
