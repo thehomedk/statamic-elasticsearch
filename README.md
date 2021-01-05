@@ -100,6 +100,5 @@ The template can be overridden by publishing it:
     php artisan vendor:publish --tag=elasticsearch-views
 
 ### Planned features
-- Facets
-- set analyzer based om documents site locale
+- Set analyzer based om documents site locale
 
