@@ -39,7 +39,8 @@ class Search extends Component
         'q' => ['except' => ''],
         'page' => ['except' => 1],
     ];
-
+    
+    /** @var array */
     protected $listeners = [
         'nextPage' => 'nextPage',
         'previousPage' => 'previousPage',

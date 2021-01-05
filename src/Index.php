@@ -316,7 +316,7 @@ class Index extends BaseIndex
         $this->client->indices()->create($params);
     }
 
-    protected function otherCollections($collection)
+    protected function otherCollections(string $collection) : array
     {
         $searchables = collect(Arr::wrap($this->config['searchables']));
         return $searchables

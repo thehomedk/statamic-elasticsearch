@@ -3,3 +3,7 @@ parameters:
     paths:
         - src
     checkMissingIterableValueType: false
+    ignoreErrors:
+        - '#Call to an undefined method Statamic\\Contracts\\Entries\\QueryBuilder::+#'
+        - '#Data::find+#'
+        - '#Access to an undefined property Statamic\\Facades\\Data+#'

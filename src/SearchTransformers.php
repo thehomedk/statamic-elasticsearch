@@ -55,7 +55,7 @@ class SearchTransformers
         $iterator = new \RecursiveArrayIterator($haystack);
         $recursive = new \RecursiveIteratorIterator(
             $iterator,
-            \RecursiveIteratorIterator::SELF_FIRST,
+            \RecursiveIteratorIterator::SELF_FIRST
         );
         foreach ($recursive as $key => $value) {
             if ($key === $needle) {

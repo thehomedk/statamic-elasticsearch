@@ -60,7 +60,7 @@ class Query extends QueryBuilder
         return $this->getBaseItems();
     }
 
-    public function getBaseItems()
+    public function getBaseItems() : mixed
     {
         $results = $this->getSearchResults($this->query);
 
