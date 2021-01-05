@@ -1,10 +1,9 @@
 <div>
     <div class="w-full p-8 bg-white text-center border rounded">
-        <div class="medium-heading">Search</div>
         <form class="center" wire:submit.prevent="resetPage">
                 <div class="flex">
-                    <input  class="form-input mx-8 my-4" id="q" type="text" placeholder="Search for .." wire:model.defer="q" />
-                    <button class="">Search</button>
+                    <input  class="border rounded mx-8 px-4 py-1" id="q" type="text" placeholder="Search for .." wire:model.defer="q" />
+                    <button class="border rounded mx-8 px-4 py-1">Search</button>
                 </div>
         </form>
     </div>
@@ -17,7 +16,7 @@
         @if($total > 0)
 
             <div class="w-full md:max-w-3xl my-10 pb-6 flex justify-between border-b-2 border-grey">
-                <div class="text-base font-normal leading-none" role="status">{{ $range }} of {{ $total }} pages</div>
+                <div class="text-base font-normal leading-none" role="status">{{ $range }} of {{ $total }} hits</div>
             </div>
 
             <div class="space-y-4 md:space-y-6" id="search-result">

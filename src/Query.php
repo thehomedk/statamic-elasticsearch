@@ -30,7 +30,7 @@ class Query extends QueryBuilder
     protected $collection;
 
     /**
-     * getSearchResults
+     * Method getSearchResults
      *
      * @param  string $query
      * @return Collection
@@ -51,7 +51,7 @@ class Query extends QueryBuilder
     }
 
     /**
-     * getItems
+     * Method getItems
      *
      * @return mixed
      */
@@ -59,8 +59,13 @@ class Query extends QueryBuilder
     {
         return $this->getBaseItems();
     }
-
-    public function getBaseItems() : mixed
+    
+    /**
+     * Method getBaseItems
+     *
+     * @return mixed
+     */
+    public function getBaseItems()
     {
         $results = $this->getSearchResults($this->query);
 
@@ -79,7 +84,7 @@ class Query extends QueryBuilder
     }
 
     /**
-     * getTotal
+     * Method getTotal
      *
      * @return int
      */
@@ -89,7 +94,7 @@ class Query extends QueryBuilder
     }
 
     /**
-     * set site
+     * Method site
      *
      * @param  string $site
      * @return \TheHome\StatamicElasticsearch\Query
@@ -102,7 +107,7 @@ class Query extends QueryBuilder
     }
 
     /**
-     * set collection
+     * Method collection
      *
      * @param  string $collection
      * @return \TheHome\StatamicElasticsearch\Query

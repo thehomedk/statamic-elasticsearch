@@ -118,7 +118,7 @@ class Index extends BaseIndex
                     ) {
                         $item[$fieldName] = $transformers[$funcName](
                             $item[$fieldName],
-                            $key,
+                            $key
                         );
                     }
                 }
@@ -179,7 +179,7 @@ class Index extends BaseIndex
                 "collection",
                 "sticky",
                 "blueprint",
-            ]),
+            ])
         );
 
         if (isset($this->config["boost"])) {
@@ -316,7 +316,7 @@ class Index extends BaseIndex
         $this->client->indices()->create($params);
     }
 
-    protected function otherCollections(string $collection) : array
+    protected function otherCollections(string $collection): array
     {
         $searchables = collect(Arr::wrap($this->config['searchables']));
         return $searchables
