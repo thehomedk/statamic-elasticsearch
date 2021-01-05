@@ -5,8 +5,6 @@ namespace TheHome\StatamicElasticsearch;
 use Statamic\Search\Index as BaseIndex;
 use TheHome\StatamicElasticsearch\SearchTransformers;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Log;
-use Statamic\Facades\Site;
 
 class Index extends BaseIndex
 {
@@ -119,7 +117,8 @@ class Index extends BaseIndex
                         !empty($item[$fieldName])
                     ) {
                         $item[$fieldName] = $transformers[$funcName](
-                            $item[$fieldName]
+                            $item[$fieldName],
+                            $key,
                         );
                     }
                 }
@@ -131,9 +130,11 @@ class Index extends BaseIndex
                     ],
                 ];
 
-                // Use handle from site object to filter on site
-                if (isset($item["site"])) {
-                    $item["site"] = $item["site"]->handle();
+                // Use handle from collection as value for sticky
+                if (isset($item["sticky"]) && isset($item["collection"])) {
+                    $item["sticky"] = $item["sticky"]
+                        ? $item["collection"]
+                        : null;
                 }
 
                 $params["body"][] = $item;
@@ -157,17 +158,38 @@ class Index extends BaseIndex
      * @param  int $limit
      * @param  int $offset
      * @param  string $site
+     * @param  string $collection
      * @return array
      */
     public function searchUsingApi(
         string $query,
         $limit,
         int $offset = 0,
-        $site
+        $site,
+        $collection
     ): array {
         $use_status_filter = in_array("status", $this->config["fields"]);
         $use_site_filter = $site && in_array("site", $this->config["fields"]);
-        $fields = array_diff($this->config["fields"], ["status", "site"]);
+        $use_collection_boost = in_array("collection", $this->config["fields"]);
+        $use_sticky_boost = in_array("sticky", $this->config["fields"]);
+        $fields = array_values(
+            array_diff($this->config["fields"], [
+                "status",
+                "site",
+                "collection",
+                "sticky",
+                "blueprint",
+            ]),
+        );
+
+        if (isset($this->config["boost"])) {
+            $boost = $this->config["boost"];
+            foreach ($fields as $key => $value) {
+                if (isset($boost[$value])) {
+                    $fields[$key] = sprintf("%s^%s", $value, $boost[$value]);
+                }
+            }
+        }
 
         $limit = $limit ?? 200;
 
@@ -211,6 +233,42 @@ class Index extends BaseIndex
             ];
         }
 
+        if ($use_collection_boost) {
+            $params["body"]["query"]["bool"]["should"][] = [
+                "term" => [
+                    "collection" => [
+                        "value" => $collection,
+                        "boost" => $this->config["boost"]["collection"] ?? 5,
+                    ],
+                ],
+            ];
+        }
+
+        if ($use_sticky_boost) {
+            $params["body"]["query"]["bool"]["should"][] = [
+                "term" => [
+                    "sticky" => [
+                        "value" => $collection,
+                        'boost' => $this->config["boost"]["sticky"] ?? 8,
+                    ],
+                ],
+            ];
+        }
+
+        if (
+            in_array("blueprint", $this->config["fields"]) &&
+            isset($this->config["duplicate"])
+        ) {
+            $params["body"]["query"]["bool"]["must_not"]["bool"]["filter"] = [
+                [
+                    "terms" => [
+                        "collection" => $this->otherCollections($collection),
+                    ],
+                ],
+                ["term" => ["blueprint" => $this->config["duplicate"]]],
+            ];
+        }
+
         $response = $this->client->search($params);
 
         $hits = collect($response["hits"]["hits"])->map(function ($hit) {
@@ -246,11 +304,30 @@ class Index extends BaseIndex
             ],
             "mappings" => [
                 "properties" => [
+                    "site" => ["type" => "keyword"],
                     "status" => ["type" => "keyword"],
+                    "collection" => ["type" => "keyword"],
+                    "sticky" => ["type" => "keyword"],
+                    "blueprint" => ["type" => "keyword"],
                 ],
             ],
         ];
 
         $this->client->indices()->create($params);
+    }
+
+    protected function otherCollections($collection)
+    {
+        $searchables = collect(Arr::wrap($this->config['searchables']));
+        return $searchables
+            ->map(function ($item) use ($collection) {
+                if (starts_with($item, 'collection:')) {
+                    $handle = str_after($item, 'collection:');
+                    return $handle !== $collection ? $handle : null;
+                }
+            })
+            ->filter()
+            ->values()
+            ->all();
     }
 }

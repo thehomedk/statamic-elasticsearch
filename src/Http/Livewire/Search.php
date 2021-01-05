@@ -19,8 +19,17 @@ class Search extends Component
     /** @var string */
     public $site;
 
+    /** @var string */
+    public $collection;
+
     /** @var int */
     public $page = 1;
+
+    /** @var int */
+    public $pages = 1;
+  
+    /** @var string */
+    public $range;
 
     /** @var int */
     public $total;
@@ -31,17 +40,24 @@ class Search extends Component
         'page' => ['except' => 1],
     ];
 
+    protected $listeners = [
+        'nextPage' => 'nextPage',
+        'previousPage' => 'previousPage',
+    ];
+
     /**
      * mount
      * 
      * @param  string $index
      * @param  int $size
+     * @param  string $collection
      * @return void
      */
-    public function mount($index = 'default', $size = 10) {
+    public function mount($index = 'default', $size = 10, $collection = null) {
         $this->index = $index;
         $this->size = $size;
         $this->site = \Statamic\Facades\Site::current()->handle();
+        $this->collection = $collection;
     }
 
     /**
@@ -85,115 +101,32 @@ class Search extends Component
     }
 
     /**
-     * setPage
-     * 
-     * @param  int $page
-     * @return void
-     */
-    public function setPage($page)
-    {
-        $this->page = $page;
-    }
-
-    /**
-     * totalPages
-     * 
-     * @return int
-     */
-    public function totalPages(): int
-    {
-        return (int) ceil($this->total / $this->size);
-    }
-
-    /**
-     * pagination
-     * 
-     * @return array
-     */
-    public function pagination(): array
-    {
-        $pages[] = 1;
-        if ($this->page > 2) {
-            if ($this->page > 3) {
-                $pages[] = '...';
-            }
-            if ($this->page === $this->totalPages()) {
-                $pages[] = $this->page - 2;
-            }
-            $pages[] = $this->page - 1;
-            $pages[] = $this->page;
-            if ($this->page < $this->totalPages() - 1) {
-                $pages[] = $this->page + 1;
-            }
-        } else {
-            if ($this->page > 1) {
-                $pages[] = 2;
-            }
-            if ($this->page < $this->totalPages() - 2) {
-                $pages[] = $this->page + 1;
-            }
-            if ($this->page < $this->totalPages() - 1) {
-                $pages[] = $this->page + 2;
-            }
-        }
-
-        if ($this->page < $this->totalPages() - 2) {
-            $pages[] = '...';
-        }
-        if ($this->page < $this->totalPages()) {
-            $pages[] = $this->totalPages();
-        }
-
-        return $pages;
-    }
-
-    /**
-     * Determine if the paginator is on the first page.
-     *
-     * @return bool
-     */
-    public function onFirstPage(): bool
-    {
-        return $this->page <= 1;
-    }
-
-    /**
-     * Determine if the paginator should be visible.
-     *
-     * @return bool
-     */
-    public function showPaginator(): bool
-    {
-        return $this->total > $this->size;
-    }
-
-    /**
-     * Determine if the paginator is on the last page.
-     *
-     * @return bool
-     */
-    public function onLastPage(): bool
-    {
-        return $this->page === $this->totalPages();
-    }
-
-    /**
-     * Determine if the paginator is on the last page.
+     * Perform search.
      *
      * @return array
      */
     protected function search()
-    {
+    {   
         if ($this->q !== null) {
+            $offset = $this->size * ($this->page - 1);
             $builder = StatamicSearch::index($this->index)
                 ->ensureExists()
                 ->useElasticPagination()
                 ->search($this->q)
                 ->site($this->site)
+                ->collection($this->collection)
                 ->limit($this->size)
-                ->offset($this->size * ($this->page - 1));
+                ->offset($offset);
             $items = $builder->getItems();
             $this->total = $builder->getTotal();
+            $this->pages = (int) ceil($this->total / $this->size);
+            
+            if ($this->pages > 1) {
+                $last = $this->page < $this->pages ? $offset + $this->size : $this->total;
+                $this->range = sprintf("%d-%d", $offset + 1, $last);
+            } else {
+                $this->range = sprintf("1-%d", $this->total);  
+            }
 
             return $items;
         }
