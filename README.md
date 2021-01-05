@@ -92,7 +92,7 @@ Then you need to have Livewire support for your antlers templates. The easy way 
 Then make your search antlers template including:
 
     {{ livewire:styles }}
-    {{ livewire:elasticsearch.search index="public" limit="10"}}
+    {{ livewire:elasticsearch.search index="public" size="10"}}
     {{ livewire:scripts }}  
 
 The template can be overridden by publishing it:
