@@ -8,11 +8,13 @@ class SearchTransformers
     public static function resolve(): array
     {
         return [
-            'bardToText' => function ($data): string {
+            'bardToText' => function ($data, $id): string {
                 $text = '';
                 if (is_array($data)) {
                     foreach (self::recursiveFind($data, 'text') as $value) {
-                        $text .= ' ' . $value;
+                        if (!is_array($value)) {
+                            $text .= ' ' . $value;
+                        }
                     }
                 } else {
                     $text = $data;
@@ -55,7 +57,7 @@ class SearchTransformers
         $iterator = new \RecursiveArrayIterator($haystack);
         $recursive = new \RecursiveIteratorIterator(
             $iterator,
-            \RecursiveIteratorIterator::SELF_FIRST
+            \RecursiveIteratorIterator::SELF_FIRST,
         );
         foreach ($recursive as $key => $value) {
             if ($key === $needle) {
