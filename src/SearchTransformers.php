@@ -8,7 +8,7 @@ class SearchTransformers
     public static function resolve(): array
     {
         return [
-            'bardToText' => function ($data, $id): string {
+            'bardToText' => function ($data): string {
                 $text = '';
                 if (is_array($data)) {
                     foreach (self::recursiveFind($data, 'text') as $value) {
