@@ -122,5 +122,5 @@ The template can be overridden by publishing it:
 
 ### Planned features
 - Set analyzer based om documents site locale
-- Configurable compound query type
+- Configurable multi-match query type
 
