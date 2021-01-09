@@ -97,8 +97,7 @@ The included Livewire component supports pagination using Elasticsearch for the 
       'fields' => [ ... 'status'],
     ],
  
- #### Multisite
- If you have multiple sites and wan't the search page to only return results from a specific site then you must add the `site` field to the index. 
+If you have multiple sites and wan't the search page to only return results from a specific site then you must add the `site` field to the index. 
  The `site` field is an object so it must be transformed with the `handle` transformer.
  
     'public' => [
