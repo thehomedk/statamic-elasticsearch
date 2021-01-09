@@ -35,7 +35,10 @@ Statamic supports transformers for the index data, but the current implementatio
       'transforms' => ['content' => 'bardToText'],
     ],
 
-At the moment only the `bardToText` transformer is supported. This transformer converts the ProseMirror data structure into plain text so it can be indexed. 
+#### Available transformers
+
+ - 'bardToText`, converts the ProseMirror data structure into plain text so it can be indexed.
+ - 'handle', converts fields that has a handle (eg. site and collection) into the handle text.
 
 ## Analyzers
 Elasticsearch supports different text analyzers for indexing. The analyzer determines how tokenization, stop-words and stemming is handled. You can set the default analyzer used (for all fields) like this:
@@ -48,6 +51,15 @@ Elasticsearch supports different text analyzers for indexing. The analyzer deter
     ],
 
 If not set, the `standard` analyzer is used. See list of available language analyzers [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-lang-analyzer.html).
+
+## Field boost
+You can boost individual fields by defining a boost value.
+
+    'boost' => [
+        'title' => '2',
+        'keywords' => '2'
+    ]
+
 
 ## Updating indexes
 Whenever you save an item in the Control Panel it will automatically update any appropriate indexes as this is extending the Statamic search. As expected you can update the index via command line.
@@ -78,12 +90,22 @@ You can use the default Statamic search tag like usual:
     {{ /search:results }}
 
 ### Livewire componenent with pagination
-The included Livewire component supports pagination using Elasticsearch for the pagination. This requires that the fields `status` and `site` are indexed so add them to the config:
+The included Livewire component supports pagination using Elasticsearch for the pagination. This requires that the fields `status` are indexed so add them to the config:
 
     'public' => [
       ....
+      'fields' => [ ... 'status'],
+    ],
+ 
+ #### Multisite
+ If you have multiple sites and wan't the search page to only return results from a specific site then you must add the `site` field to the index. 
+ The `site` field is an object so it must be transformed with the `handle` transformer.
+ 
+    'public' => [
+      ....
       'fields' => [ ... 'status', 'site'],
-    ], 
+      'transforms' => ['site' => 'handle'],
+    ],     
 
 Then you need to have Livewire support for your antlers templates. The easy way is to install Jonas's addon : 
 
@@ -101,4 +123,5 @@ The template can be overridden by publishing it:
 
 ### Planned features
 - Set analyzer based om documents site locale
+- Configurable compound query type
 
