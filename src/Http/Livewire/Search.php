@@ -109,7 +109,7 @@ class Search extends Component
     public function resetSearch()
     {
         $this->reset('q');
-        $this->total = null;
+        unset($this->total);
         $this->page = 1;
     }
 
