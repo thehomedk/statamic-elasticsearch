@@ -102,6 +102,18 @@ class Search extends Component
     }
 
     /**
+     * resetSearch
+     * 
+     * @return void
+     */
+    public function resetSearch()
+    {
+        $this->reset('q');
+        $this->total = null;
+        $this->page = 1;
+    }
+
+    /**
      * Perform search.
      *
      * @return array
