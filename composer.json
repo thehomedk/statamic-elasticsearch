@@ -1,6 +1,6 @@
 {
     "name": "thehome/statamic-elasticsearch",
-    "license": "MIT",
+    "license": "proprietary",
     "description": "Elasticsearch driver for Statamic",
     "keywords": [
         "Statamic",
