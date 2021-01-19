@@ -253,6 +253,13 @@ class Index extends BaseIndex
                     ],
                 ],
             ];
+
+            $params["body"]["query"]["bool"]["should"][] = [
+                "terms" => [
+                    "sticky" => $this->otherCollections($collection),
+                     'boost' => $this->config["boost"]["sticky"] / 2 ?? 6,
+                ],
+            ];
         }
 
         if (
