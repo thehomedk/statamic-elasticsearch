@@ -5,5 +5,9 @@ parameters:
     checkMissingIterableValueType: false
     ignoreErrors:
         - '#Call to an undefined method Statamic\\Contracts\\Entries\\QueryBuilder::+#'
+        - '#Call to an undefined method Statamic\\Contracts\\Entries\\Entry::+#'
+        - '#Static call to instance method Statamic\\Facades\\Asset::+#'
+        - '#Call to an undefined method Statamic\\Facades\\Asset::+#'
         - '#Data::find+#'
         - '#Access to an undefined property Statamic\\Facades\\Data+#'
+
