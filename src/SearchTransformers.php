@@ -2,6 +2,7 @@
 
 namespace TheHome\StatamicElasticsearch;
 use Statamic\Facades\Entry;
+use Statamic\Facades\Asset;
 
 class SearchTransformers
 {
@@ -46,6 +47,22 @@ class SearchTransformers
                 } else {
                     return $data;
                 }
+            },
+            'subsidy' => function ($data, $item): string {
+                $id = str_after($item, 'entry::');
+                $entry = Entry::find($id);
+                if ($entry) {
+                    $category = $entry->get('subsidy_categories');
+                    $year = $data;
+                    $asset = Asset::findById(
+                        sprintf("subsidies::%s/%s.txt", $year, $category),
+                    );
+                    if ($asset) {
+                        $html = file_get_contents($asset->resolvedPath());
+                        return html_entity_decode(strip_tags($html));
+                    }
+                }
+                return $data;
             },
         ];
     }
