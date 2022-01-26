@@ -10,7 +10,7 @@
     "type": "statamic-addon",
     "require": {
         "elasticsearch/elasticsearch": "^7.9",
-        "php": "^7.4",
+        "php": "^7.4 || ^8.0",
         "laravel/framework": "^7.0 || ^8.0",
         "statamic/cms": "^3.0"
     },
@@ -37,8 +37,13 @@
         }
     },
     "require-dev": {
-        "phpstan/phpstan": "^0.12.52",
+        "phpstan/phpstan": "^1.4.2",
         "phpunit/phpunit": "^9",
         "livewire/livewire": "^2.3"
+    },
+    "config": {
+        "allow-plugins": {
+            "pixelfear/composer-dist-plugin": true
+        }
     }
 }

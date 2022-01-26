@@ -163,10 +163,10 @@ class Index extends BaseIndex
      */
     public function searchUsingApi(
         string $query,
-        $limit,
+        $limit = null,
         int $offset = 0,
-        $site,
-        $collection
+        $site = null,
+        $collection = null
     ): array {
         $use_status_filter = in_array("status", $this->config["fields"]);
         $use_site_filter = $site && in_array("site", $this->config["fields"]);
@@ -257,7 +257,7 @@ class Index extends BaseIndex
             $params["body"]["query"]["bool"]["should"][] = [
                 "terms" => [
                     "sticky" => $this->otherCollections($collection),
-                     'boost' => $this->config["boost"]["sticky"] / 2 ?? 6,
+                    'boost' => $this->config["boost"]["sticky"] ? $this->config["boost"]["sticky"] / 2 : 6,
                 ],
             ];
         }
