@@ -11,7 +11,7 @@
     "require": {
         "elasticsearch/elasticsearch": "^7.9",
         "php": "^7.4 || ^8.0",
-        "laravel/framework": "^7.0 || ^8.0 | ^9.0",
+        "laravel/framework": "^7.0 || ^8.0 || ^9.0",
         "statamic/cms": "^3.0"
     },
     "authors": [
