@@ -326,7 +326,6 @@ class Index extends BaseIndex
                     "collection" => ["type" => "keyword"],
                     "sticky" => ["type" => "keyword"],
                     "blueprint" => ["type" => "keyword"],
-                    "keyword" => ["type" => "wildcard"],
                 ],
             ],
         ];
