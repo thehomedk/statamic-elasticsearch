@@ -104,6 +104,7 @@ class Index extends BaseIndex
 
         $chunks = $documents->chunk(10);
 
+        /** @var \Illuminate\Support\Collection $chunk */
         foreach ($chunks as $chunk) {
             $params = [];
             $chunk->each(function ($item, $key) use (
@@ -234,14 +235,23 @@ class Index extends BaseIndex
         }
 
         if ($use_collection_boost) {
-            $params["body"]["query"]["bool"]["should"][] = [
-                "term" => [
-                    "collection" => [
-                        "value" => $collection,
-                        "boost" => $this->config["boost"]["collection"] ?? 5,
+            if ($this->config["collection_subdue"]) {
+                $params["body"]["query"]["bool"]["should"][] = [
+                    "terms" => [
+                        "collection" => $this->otherCollections($collection),
+                        'boost' => $this->config["collection_subdue"],
                     ],
-                ],
-            ];
+                ];
+            } else {
+                $params["body"]["query"]["bool"]["should"][] = [
+                    "term" => [
+                        "collection" => [
+                            "value" => $collection,
+                            "boost" => $this->config["boost"]["collection"] ?? 5,
+                        ],
+                    ],
+                ];
+            }
         }
 
         if ($use_sticky_boost) {
@@ -316,6 +326,7 @@ class Index extends BaseIndex
                     "collection" => ["type" => "keyword"],
                     "sticky" => ["type" => "keyword"],
                     "blueprint" => ["type" => "keyword"],
+                    "keyword" => ["type" => "wildcard"],
                 ],
             ],
         ];
