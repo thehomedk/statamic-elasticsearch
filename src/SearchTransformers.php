@@ -1,6 +1,7 @@
 <?php
 
 namespace TheHome\StatamicElasticsearch;
+
 use Statamic\Facades\Entry;
 use Statamic\Facades\Asset;
 
@@ -34,9 +35,9 @@ class SearchTransformers
 
                 $hasShadow =
                     Entry::query()
-                        ->where('blueprint', 'shadow')
-                        ->where('shadowing', $id)
-                        ->count() > 0;
+                    ->where('blueprint', 'shadow')
+                    ->where('shadowing', $id)
+                    ->count() > 0;
 
                 if ($hasShadow) {
                     return 'shadow';
@@ -79,6 +80,16 @@ class SearchTransformers
         foreach ($recursive as $key => $value) {
             if ($key === $needle) {
                 yield $value;
+            }
+            if ($key == 'cells') {
+                $values = [];
+                foreach ($value as $cell) {
+                    $cell = \Illuminate\Support\Str::remove([',', '.'], $cell);
+                    if (!is_numeric($cell)) {
+                        $values[] = $cell;
+                    }
+                };
+                yield join(' ', $values);
             }
         }
     }
