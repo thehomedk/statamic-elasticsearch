@@ -92,10 +92,10 @@ class Index extends BaseIndex
         try {
             $response = $this->client->indices()->exists($this->indexName());
         } catch (\Exception $exception) {
-           return false;
+            return false;
         }
 
-        return true;
+        return $response->asBool();
     }
 
     protected function insertDocuments(
@@ -153,7 +153,7 @@ class Index extends BaseIndex
 
     protected function deleteIndex(): void
     {
-        if ($this->client->indices()->exists($this->indexName())) {
+        if ($this->exists()) {
             $this->client->indices()->delete($this->indexName());
         }
     }
