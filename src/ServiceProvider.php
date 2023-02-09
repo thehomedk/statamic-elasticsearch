@@ -4,7 +4,7 @@ namespace TheHome\StatamicElasticsearch;
 
 use Elasticsearch\ClientBuilder;
 use Statamic\Providers\AddonServiceProvider;
-use Statamic\Search\IndexManager;
+use Statamic\Facades\Search;
 use TheHome\StatamicElasticsearch\Index as ElasticsearchIndex;
 
 class ServiceProvider extends AddonServiceProvider
@@ -13,9 +13,9 @@ class ServiceProvider extends AddonServiceProvider
     {
         parent::boot();
 
-        app(IndexManager::class)->extend(
+        Search::extend(
             ElasticsearchIndex::DRIVER_NAME,
-            function ($app, $config, $name) {
+            function ($app, array $config, $name) {
                 $client = ClientBuilder::create()
                     ->setHosts($config["hosts"])
                     ->build();

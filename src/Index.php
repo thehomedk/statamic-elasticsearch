@@ -13,7 +13,7 @@ class Index extends BaseIndex
     /**
      * client
      *
-     * @var \Elasticsearch\Client
+     * @var \Elastic\Elasticsearch\Client
      */
     protected $client;
 
@@ -27,13 +27,13 @@ class Index extends BaseIndex
     /**
      * __construct
      *
-     * @param  \Elasticsearch\Client $client
+     * @param  \Elastic\Elasticsearch\Client $client
      * @param  string $name
      * @param  array $config
      * @return void
      */
     public function __construct(
-        \Elasticsearch\Client $client,
+        \Elastic\Elasticsearch\Client $client,
         string $name,
         array $config
     ) {
@@ -89,7 +89,13 @@ class Index extends BaseIndex
 
     public function exists(): bool
     {
-        return $this->client->indices()->exists($this->indexName());
+        try {
+            $response = $this->client->indices()->exists($this->indexName());
+        } catch (\Exception $exception) {
+           return false;
+        }
+
+        return true;
     }
 
     protected function insertDocuments(
