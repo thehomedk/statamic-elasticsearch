@@ -2,7 +2,7 @@
 
 namespace TheHome\StatamicElasticsearch;
 
-use Elastic\Elasticsearch\ClientBuilder;
+use Elasticsearch\ClientBuilder;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Facades\Search;
 use TheHome\StatamicElasticsearch\Index as ElasticsearchIndex;

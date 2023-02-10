@@ -9,7 +9,7 @@
     "homepage": "https://www.thehome.dk",
     "type": "statamic-addon",
     "require": {
-        "elasticsearch/elasticsearch": "^8.0",
+        "elasticsearch/elasticsearch": "^7.0",
         "php": "^8.0",
         "laravel/framework": "^7.0 || ^8.0 || ^9.0 || ^10.0",
         "statamic/cms": "^3.4"
