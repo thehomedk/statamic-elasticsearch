@@ -84,7 +84,11 @@ class Index extends BaseIndex
     {
         $params = $this->indexName();
         $params["id"] = $document->reference();
-        $this->client->delete($params);
+        try {
+            $this->client->delete($params);
+        } catch (\Exception $exception) {
+            return;
+        }
     }
 
     public function exists(): bool
